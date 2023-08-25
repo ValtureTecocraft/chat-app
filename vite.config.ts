@@ -11,7 +11,7 @@ export default defineConfig({
         manualChunks: {
           // Define manual chunks here
           // For example:
-          myChunk: ["lodash", "axios"],
+          // myChunk: ["axios"],
         },
       },
     },
