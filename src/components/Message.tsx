@@ -8,11 +8,32 @@ export const Message = ({ message }: { message: any }) => {
   const currentUser = useContext(AuthContext);
   const { data } = useContext(ChatContext);
 
+  // console.log(message.date);
+
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
+
+  const convertTimestampToTime = (timestamp: any) => {
+    const currentTime: any = new Date();
+    const targetTime: any = new Date(timestamp.seconds * 1000); // Convert seconds to milliseconds
+
+    // Calculate the time difference in seconds
+    const timeDiffInSeconds = Math.floor((currentTime - targetTime) / 1000);
+
+    if (timeDiffInSeconds < 60) {
+      return "just now";
+    }
+
+    const hours = targetTime.getHours();
+    const minutes = targetTime.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+    const formattedMinutes = String(minutes).padStart(2, "0");
+    return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
 
   return (
     <div
@@ -30,7 +51,9 @@ export const Message = ({ message }: { message: any }) => {
           }
           alt="profile"
         />
-        <span className="font-light text-xs">just now</span>
+        <span className="font-light text-xs">
+          {convertTimestampToTime(message.date)}
+        </span>
       </div>
 
       <div
