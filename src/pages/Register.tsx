@@ -75,8 +75,17 @@ export const Register: React.FC = () => {
 
   const signinWithGoogle = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const res = await signInWithPopup(auth, googleProvider);
       localStorage.setItem("user", auth?.currentUser?.uid || "");
+      await setDoc(doc(db, "users", res.user.uid), {
+        uid: res.user.uid,
+        displayName,
+        email,
+        photoURL: res.user.photoURL,
+      });
+
+      await setDoc(doc(db, "userChats", res.user.uid), {});
+
       navigate("/");
     } catch (error) {
       console.error(error);
