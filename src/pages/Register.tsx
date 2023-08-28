@@ -100,7 +100,7 @@ export const Register: React.FC = () => {
       <div className="fixed -z-50 flex justify-center items-center">
         <img
           className="min-w-[1440px] w-screen"
-          src="https://source.unsplash.com/random/1440×1080/?ocean,water,light"
+          src="https://images.unsplash.com/photo-1470596914251-afb0b4510279?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8b2NlYW4sd2F0ZXIsbGlnaHR8fHx8fHwxNjkzMjIwNzEy&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"
           alt="bg Image"
         />
       </div>
