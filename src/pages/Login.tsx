@@ -43,7 +43,7 @@ export const Login: React.FC = () => {
             type="email"
             className="w-full rounded-md"
             label="Email"
-            id="outlined-size-small"
+            id="outlined-size-small-email"
             size="small"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -52,7 +52,7 @@ export const Login: React.FC = () => {
             type="password"
             className="w-full rounded-md"
             label="password"
-            id="outlined-size-small"
+            id="outlined-size-small-password"
             size="small"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

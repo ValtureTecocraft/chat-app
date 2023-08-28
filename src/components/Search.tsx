@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
 export const Search: React.FC = () => {
+  const [userName, setUserName] = useState<string>("");
+  const [user, setUser] = useState<string>("");
+  const [err, setErr] = useState<boolean>(false);
+
   return (
     <div>
       <div className="w-full h-12">
@@ -10,6 +14,8 @@ export const Search: React.FC = () => {
           placeholder="Search..."
           name="search"
           id="search"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
         />
       </div>
       <div className="w-full p-3 flex gap-3 items-center text-white border-b-2 border-gray-500 hover:bg-[#323c52]">

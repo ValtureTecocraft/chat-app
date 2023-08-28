@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { auth } from "../config/firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 export const Navbar: React.FC = () => {
+  const currentUser = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const logOut = async () => {
@@ -22,10 +25,10 @@ export const Navbar: React.FC = () => {
       <div className="space-x-3 flex items-center">
         <img
           className="rounded-full w-6 h-6 object-cover"
-          src="https://source.unsplash.com/random/100x100/?avatar"
-          alt=""
+          src={currentUser.photoURL}
+          alt="profile"
         />
-        <span>John</span>
+        <span>{currentUser.displayName}</span>
         <button
           onClick={logOut}
           className="bg-gray-500/80 hover:bg-gray-500 text-black font-semibold px-2 rounded"

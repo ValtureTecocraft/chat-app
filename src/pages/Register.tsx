@@ -3,25 +3,73 @@ import TextField from "@mui/material/TextField";
 import { BsImage } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, googleProvider, storage } from "../config/firebase";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, db, googleProvider, storage } from "../config/firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
+import Loading from "../components/Loading";
 
 export const Register: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [fileUpload, setFileUpload] = useState<File | null>(null);
 
   const navigate = useNavigate();
 
   const signUp = async (email: string, password: string) => {
+    setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const res = await createUserWithEmailAndPassword(auth, email, password);
       localStorage.setItem("user", auth?.currentUser?.uid || "");
-      navigate("/");
+
+      if (fileUpload) {
+        const storageRef = ref(storage, name);
+        const uploadTask = uploadBytesResumable(storageRef, fileUpload);
+
+        try {
+          const snapshot = await uploadTask;
+          const downloadURL = await getDownloadURL(snapshot.ref);
+
+          // Update user's profile in Firebase Authentication
+          await updateProfile(res.user, {
+            displayName: name,
+            photoURL: downloadURL,
+          });
+
+          // Store user information in Firestore
+          await setDoc(doc(db, "users", res.user.uid), {
+            uid: res.user.uid,
+            name,
+            email,
+            photoURL: downloadURL,
+          });
+
+          await setDoc(doc(db, "userChats", res.user.uid), {});
+
+          console.log("File available at", downloadURL);
+        } catch (error) {
+          console.error("Error uploading file:", error);
+        }
+
+        navigate("/");
+
+        setLoading(false);
+      } else {
+        // Handle case where no file is selected
+        console.log("No file selected");
+
+        setLoading(false);
+      }
     } catch (error) {
       console.error(error);
+
+      setLoading(false);
     }
   };
 
@@ -42,38 +90,13 @@ export const Register: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (fileUpload) {
-      // Create a reference in Firebase Storage with the user's name as the path
-      const storageRef = ref(storage, name);
-
-      // Upload the selected file as a Blob
-      const uploadTask = uploadBytesResumable(storageRef, fileUpload);
-
-      try {
-        // Wait for the upload to complete and get the download URL
-        const snapshot = await uploadTask;
-        const downloadURL = await getDownloadURL(snapshot.ref);
-
-        // Now you can use the downloadURL as needed
-        console.log("File available at", downloadURL);
-
-        // Proceed with user registration or other actions
-        signUp(email, password);
-      } catch (error) {
-        console.error("Error uploading file:", error);
-      }
-    } else {
-      // Handle case where no file is selected
-      console.log("No file selected");
-    }
-
     signUp(email, password);
     console.log(fileUpload);
   };
 
   return (
     <div className="bgImgRegister bg-no-repeat w-full h-screen flex justify-center items-center">
+      <Loading status={loading} />
       <div className="fixed -z-50 flex justify-center items-center">
         <img
           className="min-w-[1440px] w-screen"
@@ -90,7 +113,7 @@ export const Register: React.FC = () => {
             type="text"
             className="w-full rounded-md"
             label="Display Name"
-            id="outlined-size-small"
+            id="outlined-size-small-name"
             size="small"
             value={name}
             onChange={(e) => {
@@ -101,7 +124,7 @@ export const Register: React.FC = () => {
             type="email"
             className="w-full rounded-md"
             label="Email"
-            id="outlined-size-small"
+            id="outlined-size-small-email"
             size="small"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -110,7 +133,7 @@ export const Register: React.FC = () => {
             type="password"
             className="w-full rounded-md"
             label="Password"
-            id="outlined-size-small"
+            id="outlined-size-small-password"
             size="small"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
