@@ -10,10 +10,10 @@ export const Message = ({ message }: { message: any }) => {
 
   // console.log(message.date);
 
-  const ref = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    ref.current?.scrollIntoView({ behavior: "smooth" });
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
 
   const convertTimestampToTime = (timestamp: any) => {
@@ -37,6 +37,7 @@ export const Message = ({ message }: { message: any }) => {
 
   return (
     <div
+      ref={scrollRef}
       className={`${
         message.senderId === currentUser.uid ? "flex-row-reverse" : "flex-row"
       } flex gap-4`}
