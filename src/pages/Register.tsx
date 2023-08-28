@@ -14,7 +14,7 @@ import { doc, setDoc } from "firebase/firestore";
 import Loading from "../components/Loading";
 
 export const Register: React.FC = () => {
-  const [name, setName] = useState<string>("");
+  const [displayName, setDisplayName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,7 +29,7 @@ export const Register: React.FC = () => {
       localStorage.setItem("user", auth?.currentUser?.uid || "");
 
       if (fileUpload) {
-        const storageRef = ref(storage, name);
+        const storageRef = ref(storage, displayName);
         const uploadTask = uploadBytesResumable(storageRef, fileUpload);
 
         try {
@@ -38,14 +38,14 @@ export const Register: React.FC = () => {
 
           // Update user's profile in Firebase Authentication
           await updateProfile(res.user, {
-            displayName: name,
+            displayName: displayName,
             photoURL: downloadURL,
           });
 
           // Store user information in Firestore
           await setDoc(doc(db, "users", res.user.uid), {
             uid: res.user.uid,
-            name,
+            displayName,
             email,
             photoURL: downloadURL,
           });
@@ -91,7 +91,7 @@ export const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     signUp(email, password);
-    console.log(fileUpload);
+    // console.log(fileUpload);
   };
 
   return (
@@ -115,9 +115,9 @@ export const Register: React.FC = () => {
             label="Display Name"
             id="outlined-size-small-name"
             size="small"
-            value={name}
+            value={displayName}
             onChange={(e) => {
-              setName(e.target.value);
+              setDisplayName(e.target.value);
             }}
           />
           <TextField

@@ -10,8 +10,6 @@ export const Sidebar: React.FC = () => {
       <Search />
       <div className="flex flex-col overflow-y-auto">
         <Chats />
-        <Chats />
-        <Chats />
       </div>
     </div>
   );

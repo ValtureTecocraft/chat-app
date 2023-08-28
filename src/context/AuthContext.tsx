@@ -18,7 +18,7 @@ export const AuthContxtProvider: React.FC<AuthContxtProviderProps> = ({
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setIsLoading(false);
-      console.log(user);
+      // console.log(user);
     });
 
     // Clean up the subscription when the component unmounts

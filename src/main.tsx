@@ -4,13 +4,16 @@ import App from "./App.tsx";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContxtProvider } from "./context/AuthContext.tsx";
+import { ChatContxtProvider } from "./context/ChatContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthContxtProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ChatContxtProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ChatContxtProvider>
     </AuthContxtProvider>
   </React.StrictMode>
 );
