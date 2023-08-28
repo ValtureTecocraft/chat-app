@@ -3,14 +3,15 @@ import TextField from "@mui/material/TextField";
 import { BsImage } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, googleProvider } from "../config/firebase";
+import { auth, googleProvider, storage } from "../config/firebase";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export const Register: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [file, setFile] = useState<File | null>(null);
+  const [fileUpload, setFileUpload] = useState<File | null>(null);
 
   const navigate = useNavigate();
 
@@ -36,13 +37,39 @@ export const Register: React.FC = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setFile(file || null);
+    setFileUpload(file || null);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (fileUpload) {
+      // Create a reference in Firebase Storage with the user's name as the path
+      const storageRef = ref(storage, name);
+
+      // Upload the selected file as a Blob
+      const uploadTask = uploadBytesResumable(storageRef, fileUpload);
+
+      try {
+        // Wait for the upload to complete and get the download URL
+        const snapshot = await uploadTask;
+        const downloadURL = await getDownloadURL(snapshot.ref);
+
+        // Now you can use the downloadURL as needed
+        console.log("File available at", downloadURL);
+
+        // Proceed with user registration or other actions
+        signUp(email, password);
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+    } else {
+      // Handle case where no file is selected
+      console.log("No file selected");
+    }
+
     signUp(email, password);
-    console.log(file);
+    console.log(fileUpload);
   };
 
   return (
@@ -94,7 +121,7 @@ export const Register: React.FC = () => {
           >
             <BsImage className="" />
             <span className="text-sm">
-              {file?.name ? file.name : "Upload Profile Picture"}
+              {fileUpload?.name ? fileUpload.name : "Upload Profile Picture"}
             </span>
           </label>
           <input
