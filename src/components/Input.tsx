@@ -27,25 +27,45 @@ export const Input = () => {
       const storageRef = ref(storage, uuid());
       const uploadTask = uploadBytesResumable(storageRef, img);
 
-      uploadTask.on(
-        "state_changed",
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            await updateDoc(doc(db, "chats", data.chatId), {
-              messages: arrayUnion({
-                id: uuid(),
-                text,
-                senderId: currentUser.uid,
-                date: Timestamp.now(),
-                img: downloadURL,
-              }),
-            });
-          });
-        }
-      );
+      try {
+        const snapshot = await uploadTask;
+        const downloadURL = await getDownloadURL(snapshot.ref);
+
+        // Store user information in Firestore
+        await updateDoc(doc(db, "chats", data.chatId), {
+          messages: arrayUnion({
+            id: uuid(),
+            text,
+            senderId: currentUser.uid,
+            date: Timestamp.now(),
+            img: downloadURL,
+          }),
+        });
+        console.log("File available at", downloadURL);
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+
+      // uploadTask.on(
+      //   "state_changed",
+      //   (error) => {
+      //     console.log(error);
+      //   },
+      //   () => {
+      //     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+      //       await updateDoc(doc(db, "chats", data.chatId), {
+      //         messages: arrayUnion({
+      //           id: uuid(),
+      //           text,
+      //           senderId: currentUser.uid,
+      //           date: Timestamp.now(),
+      //           img: downloadURL,
+      //         }),
+      //       });
+      //     });
+      //   }
+      // );
+      console.log();
     } else {
       await updateDoc(doc(db, "chats", data.chatId), {
         messages: arrayUnion({

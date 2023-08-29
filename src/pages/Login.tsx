@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, db, googleProvider } from "../config/firebase";
+import { FcGoogle } from "react-icons/fc";
+import { doc, setDoc } from "firebase/firestore";
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +16,25 @@ export const Login: React.FC = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       localStorage.setItem("user", auth?.currentUser?.uid || "");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const signinWithGoogle = async () => {
+    try {
+      const res = await signInWithPopup(auth, googleProvider);
+      localStorage.setItem("user", auth?.currentUser?.uid || "");
+      await setDoc(doc(db, "users", res.user.uid), {
+        uid: res.user.uid,
+        displayName: res.user.displayName,
+        email: res.user.email,
+        photoURL: res.user.photoURL,
+      });
+
+      await setDoc(doc(db, "userChats", res.user.uid), {});
+
       navigate("/");
     } catch (error) {
       console.error(error);
@@ -59,6 +80,16 @@ export const Login: React.FC = () => {
           />
           <button type="submit" className="btnBlack">
             Sign in
+          </button>
+          <button
+            type="button"
+            onClick={signinWithGoogle}
+            className="btnBlack flex justify-center items-center gap-3 py-1"
+          >
+            <span>
+              <FcGoogle />
+            </span>
+            <span>Sign in with Google</span>
           </button>
         </form>
         <p className="text-sm">

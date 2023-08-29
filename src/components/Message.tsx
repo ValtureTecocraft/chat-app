@@ -52,7 +52,7 @@ export const Message = ({ message }: { message: any }) => {
           }
           alt="profile"
         />
-        <span className="font-light text-xs">
+        <span className="font-light text-xs text-white">
           {convertTimestampToTime(message.date)}
         </span>
       </div>
@@ -62,17 +62,19 @@ export const Message = ({ message }: { message: any }) => {
           message.senderId === currentUser.uid ? "items-end" : ""
         } gap-2 flex flex-col w-full`}
       >
-        <p
-          className={`${
-            message.senderId === currentUser.uid
-              ? "bg-[#414857] text-white rounded-[10px_0px_10px_10px]"
-              : "bg-white rounded-[0px_10px_10px_10px]"
-          } max-w-max p-2 text-sm px-4`}
-        >
-          {message.text}
-        </p>
+        {message.text && (
+          <p
+            className={`${
+              message.senderId === currentUser.uid
+                ? "bg-[#414857] text-white rounded-[10px_0px_10px_10px]"
+                : "bg-white rounded-[0px_10px_10px_10px]"
+            } max-w-max p-2 text-sm px-4`}
+          >
+            {message.text}
+          </p>
+        )}
         {message.img && (
-          <img className="max-w-[25%]" src={message.img} alt="" />
+          <img className="max-w-[25%] rounded-md" src={message.img} alt="" />
         )}
       </div>
     </div>

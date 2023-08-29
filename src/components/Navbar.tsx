@@ -31,7 +31,7 @@ export const Navbar: React.FC = () => {
         <span>{currentUser.displayName}</span>
         <button
           onClick={logOut}
-          className="bg-gray-500/80 hover:bg-gray-500 text-black font-semibold px-2 rounded"
+          className="bg-gray-500/80 hover:bg-gray-500 text-black font-semibold pb-0.5 px-2 rounded"
         >
           Logout
         </button>
