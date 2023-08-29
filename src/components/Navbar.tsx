@@ -20,7 +20,7 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[56px] py-4 flex justify-between items-center px-[10px] bg-[#323c52] text-white">
+    <div className="min-h-[56px] py-3.5 flex justify-between items-center px-[10px] bg-[#323c52] text-white">
       <span className="uppercase font-bold">Chat App</span>
       <div className="space-x-3 flex items-center">
         <img

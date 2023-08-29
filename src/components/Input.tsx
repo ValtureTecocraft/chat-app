@@ -137,6 +137,7 @@ export const Input = () => {
           type="file"
           name="file"
           id="file"
+          accept="image/png, image/jpeg, image/jpg"
           onChange={handleFileChange}
         />
         <button type="submit" className="btnBlack">

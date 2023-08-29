@@ -3,7 +3,7 @@ const Loading = ({ status }: { status: boolean }) => {
     <div
       className={`fixed z-[100] ${
         status ? "flex" : "hidden"
-      }  items-center justify-center w-full min-h-screen backdrop-blur-md`}
+      } top-0 left-0 items-center justify-center w-full min-h-screen backdrop-blur-md`}
     >
       <div className="flex flex-col items-center">
         <svg
