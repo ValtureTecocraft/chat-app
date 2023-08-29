@@ -3,7 +3,7 @@ import { Message } from "./Message";
 import { ChatContext } from "../context/ChatContext";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { ImagePreviewModel } from "../model/imagePreviewModel";
+import { ImagePreviewModel } from "../model/ImagePreviewModel";
 
 export const Messages = () => {
   const [messages, setMessages] = useState<[]>([]);
