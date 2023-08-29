@@ -8,8 +8,6 @@ import { ChatContext } from "../context/ChatContext";
 export const Chat = () => {
   const { data } = useContext(ChatContext);
 
-  // Check if a user is selected
-
   return (
     <div className="w-full h-full flex flex-col bg-[#8391af]">
       {data?.isSelected && (
