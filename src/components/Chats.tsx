@@ -30,7 +30,7 @@ export const Chats = () => {
   // console.log(chats);
 
   const handleSelect = (u: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    dispatch({ type: "CHANGE_USER", payload: u });
+    dispatch({ type: "CHANGE_USER", payload: u, select: true });
   };
 
   return (

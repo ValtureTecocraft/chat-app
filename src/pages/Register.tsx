@@ -29,7 +29,10 @@ export const Register: React.FC = () => {
       localStorage.setItem("user", auth?.currentUser?.uid || "");
 
       if (fileUpload) {
-        const storageRef = ref(storage, displayName);
+        const storageRef = ref(
+          storage,
+          `user-profiles/${res.user.uid}/profileImg/${displayName}`
+        );
         const uploadTask = uploadBytesResumable(storageRef, fileUpload);
 
         try {

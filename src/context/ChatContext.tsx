@@ -15,6 +15,7 @@ export const ChatContxtProvider: React.FC<AuthContxtProviderProps> = ({
   const initialState = {
     chatId: "null",
     user: {},
+    isSelected: false,
   };
 
   const chatReducer = (state: any, action: any) => {
@@ -26,9 +27,9 @@ export const ChatContxtProvider: React.FC<AuthContxtProviderProps> = ({
             currentUser.uid > action.payload.uid
               ? currentUser.uid + action.payload.uid
               : action.payload.uid + currentUser.uid,
+          isSelected: action.select,
         };
       default:
-        action.payload;
         return state;
     }
   };

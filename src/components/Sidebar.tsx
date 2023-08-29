@@ -8,6 +8,9 @@ export const Sidebar: React.FC = () => {
     <div className="w-full h-[500px] flex flex-col">
       <Navbar />
       <Search />
+      <button type="button" className="btnGreen m-2">
+        Start Group Chat
+      </button>
       <div className="flex flex-col overflow-y-auto">
         <Chats />
       </div>

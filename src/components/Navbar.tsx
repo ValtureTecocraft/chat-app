@@ -28,7 +28,7 @@ export const Navbar: React.FC = () => {
           src={currentUser.photoURL}
           alt="profile"
         />
-        <span>{currentUser.displayName}</span>
+        <span>{currentUser.displayName?.split(" ")[0]}</span>
         <button
           onClick={logOut}
           className="bg-gray-500/80 hover:bg-gray-500 text-black font-semibold pb-0.5 px-2 rounded"
