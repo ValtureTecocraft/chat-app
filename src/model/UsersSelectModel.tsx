@@ -1,8 +1,9 @@
 import { collection, getDocs } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { db } from "../config/firebase";
+import { IoMdClose } from "react-icons/io";
 
-export const UsersSelectModel = () => {
+export const UsersSelectModel = ({ onClose }: { onClose: any }) => {
   const [users, setUsers] = useState<Array<any>>([]);
   const [selectedUsers, setSelectedUsers] = useState<Array<string>>([]);
 
@@ -26,15 +27,12 @@ export const UsersSelectModel = () => {
   }, []);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const userEmail = event.target.name;
+    const userID = event.target.name;
     if (event.target.checked) {
-      setSelectedUsers((prevSelectedUsers) => [
-        ...prevSelectedUsers,
-        userEmail,
-      ]);
+      setSelectedUsers((prevSelectedUsers) => [...prevSelectedUsers, userID]);
     } else {
       setSelectedUsers((prevSelectedUsers) =>
-        prevSelectedUsers.filter((email) => email !== userEmail)
+        prevSelectedUsers.filter((user) => user !== userID)
       );
     }
   };
@@ -42,18 +40,29 @@ export const UsersSelectModel = () => {
   console.log(selectedUsers);
 
   return (
-    <div>
-      {users?.map((user: any) => (
-        <div key={user.uid} className="flex gap-2">
-          <input
-            type="checkbox"
-            name={user.uid}
-            id={user.uid}
-            onChange={handleCheckboxChange}
-          />
-          <label htmlFor={user.uid}>{user.displayName}</label>
+    <div className="fixed backdrop-blur-md z-10 w-full h-screen flex justify-center items-center">
+      <div className="flex gap-1">
+        <div className="w-fit bg-white/90 p-5 rounded-lg">
+          {users?.map((user: any) => (
+            <div key={user.uid} className="flex gap-2">
+              <input
+                className="cursor-pointer"
+                type="checkbox"
+                name={user.uid}
+                id={user.uid}
+                onChange={handleCheckboxChange}
+              />
+              <label className="cursor-pointer" htmlFor={user.uid}>
+                {user.displayName}
+              </label>
+            </div>
+          ))}
         </div>
-      ))}
+        <IoMdClose
+          onClick={onClose}
+          className="text-lg hover:scale-125 duration-300 cursor-pointer"
+        />
+      </div>
     </div>
   );
 };

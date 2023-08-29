@@ -21,7 +21,7 @@ export const Sidebar: React.FC = () => {
       <div className="flex flex-col overflow-y-auto">
         <Chats />
       </div>
-      {toggle && <UsersSelectModel />}
+      {toggle && <UsersSelectModel onClose={() => setToggle(false)} />}
     </div>
   );
 };
