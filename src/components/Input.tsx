@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { IoMdAttach } from "react-icons/io";
+import { IoMdAttach, IoMdClose } from "react-icons/io";
 import { LuImagePlus } from "react-icons/lu";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
@@ -13,6 +13,7 @@ import {
 import { db, storage } from "../config/firebase";
 import { v4 as uuid } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { BsFillImageFill } from "react-icons/bs";
 
 export const Input = () => {
   const [text, setText] = useState<string>("");
@@ -103,8 +104,19 @@ export const Input = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full px-3 py-1 bg-white flex justify-between items-center"
+      className="relative w-full px-3 py-1 bg-white flex justify-between items-center"
     >
+      {img && (
+        <div className="absolute left-0 -top-12 h-12 w-[calc(100%-8px)] flex gap-2 items-center px-6 bg-gray-300">
+          <BsFillImageFill className="border border-black/50 rounded p-0.5 w-5 h-5" />
+          <span className="text-sm">{img?.name}</span>
+          <IoMdClose
+            onClick={() => setImg(null)}
+            className="text-base mt-1 hover:scale-125 cursor-pointer duration-300"
+          />
+        </div>
+      )}
+
       <input
         autoComplete="off"
         className="w-full h-10 outline-none"

@@ -74,7 +74,11 @@ export const Message = ({ message }: { message: any }) => {
           </p>
         )}
         {message.img && (
-          <img className="max-w-[25%] rounded-md" src={message.img} alt="" />
+          <img
+            className="max-w-[25%] w-full rounded-md"
+            src={message.img}
+            alt=""
+          />
         )}
       </div>
     </div>
