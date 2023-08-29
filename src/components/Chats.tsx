@@ -6,7 +6,6 @@ import { ChatContext } from "../context/ChatContext";
 
 export const Chats = () => {
   const [chats, setChats] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(true);
 
   const currentUser = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
