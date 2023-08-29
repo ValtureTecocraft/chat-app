@@ -2,7 +2,13 @@ import { useRef, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
 
-export const Message = ({ message }: { message: any }) => {
+export const Message = ({
+  message,
+  imgClick,
+}: {
+  message: any;
+  imgClick: any;
+}) => {
   // console.log(message);
 
   const currentUser = useContext(AuthContext);
@@ -75,7 +81,8 @@ export const Message = ({ message }: { message: any }) => {
         )}
         {message.img && (
           <img
-            className="max-w-[25%] w-full rounded-md"
+            onClick={() => imgClick(message.img)}
+            className="max-w-[25%] w-full rounded-md cursor-pointer"
             src={message.img}
             alt=""
           />
