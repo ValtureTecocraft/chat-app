@@ -3,6 +3,7 @@ import { Navbar } from "./Navbar";
 import { Search } from "./Search";
 import { Chats } from "./Chats";
 import { UsersSelectModel } from "../model/UsersSelectModel";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 
 export const Sidebar: React.FC = () => {
   const [toggle, setToggle] = useState(false);
@@ -14,8 +15,9 @@ export const Sidebar: React.FC = () => {
       <button
         onClick={() => setToggle(true)}
         type="button"
-        className="btnGreen m-2"
+        className="btnGreen m-2 flex justify-center items-center gap-2"
       >
+        <AiOutlineUsergroupAdd className="text-lg" />
         Start Group Chat
       </button>
       <div className="flex flex-col overflow-y-auto">
