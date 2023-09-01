@@ -7,6 +7,7 @@
    - export const auth = gethAuth()
 
 2. Registration :-
+
    - Initialize Email And Password Authantication from firebase (& Google if needed).
    - For registration with email and password, import createUserWithEmailAndPassword.
    - Its a function so pass it in handleSubmit, createUserWithEmailAndPassword(auth, email, password)
@@ -18,5 +19,3 @@
      - initialize storage in firebase.
      - create a reference to upload the file : const storageRef = ref(storage, "fileName"');
      - const uploadTask = uploadBytesResumable(storageRef, file);
-     - use uploadTask.on() to upload the file.
-     -

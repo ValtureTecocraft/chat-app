@@ -80,12 +80,12 @@ export const Message = ({
           </p>
         )}
         {message.img && (
-          <img
+          <div
             onClick={() => imgClick(message.img)}
-            className="max-w-[25%] w-full rounded-md cursor-pointer"
-            src={message.img}
-            alt=""
-          />
+            className="max-w-[25%] h-28 overflow-hidden w-full flex justify-center items-center rounded-md cursor-pointer"
+          >
+            <img className="w-full" src={message.img} alt="" />
+          </div>
         )}
       </div>
     </div>
