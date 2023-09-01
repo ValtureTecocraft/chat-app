@@ -4,6 +4,7 @@ import { Search } from "./Search";
 import { Chats } from "./Chats";
 import { UsersSelectModel } from "../model/UsersSelectModel";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { GroupChats } from "./GroupChats";
 
 export const Sidebar: React.FC = () => {
   const [toggle, setToggle] = useState(false);
@@ -21,6 +22,7 @@ export const Sidebar: React.FC = () => {
         Start Group Chat
       </button>
       <div className="flex flex-col overflow-y-auto">
+        <GroupChats />
         <Chats />
       </div>
       {toggle && <UsersSelectModel onClose={() => setToggle(false)} />}
