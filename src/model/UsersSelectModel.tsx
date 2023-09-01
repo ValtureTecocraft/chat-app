@@ -1,26 +1,32 @@
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   serverTimestamp,
   setDoc,
   // updateDoc,
 } from "firebase/firestore";
 import { v4 as uuid } from "uuid";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { db, storage } from "../config/firebase";
 import { IoMdClose, IoMdSearch } from "react-icons/io";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { BsImage } from "react-icons/bs";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import Loading from "../components/Loading";
+import { AuthContext } from "../context/AuthContext";
 
 export const UsersSelectModel = ({ onClose }: { onClose: any }) => {
   const [users, setUsers] = useState<Array<any>>([]);
   const [search, setSearch] = useState<string>("");
   const [groupName, setGroupName] = useState<string>("");
   const [img, setImg] = useState<File | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const [selectedUsers, setSelectedUsers] = useState<Array<string>>([]);
   const [filteredUsers, setFilteredUsers] = useState<Array<any>>(users);
+
+  const currentUser = useContext(AuthContext);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -67,6 +73,7 @@ export const UsersSelectModel = ({ onClose }: { onClose: any }) => {
   };
 
   const createGroupChat = async () => {
+    setLoading(true);
     if (img && groupName && selectedUsers.length > 0) {
       const storageRef = ref(storage, `group-profiles/groupImg/${groupName}`);
       const uploadTask = uploadBytesResumable(storageRef, img);
@@ -78,28 +85,56 @@ export const UsersSelectModel = ({ onClose }: { onClose: any }) => {
 
       const groupId = uuid();
 
+      // Initialize an array with the current user's data
+      const membersData = [
+        {
+          displayName: currentUser.displayName,
+          uid: currentUser.uid,
+          photoURL: currentUser.photoURL,
+          email: currentUser.email,
+        },
+      ];
+
+      // Fetch user data for each selected user (excluding the current user)
+      for (const userId of selectedUsers) {
+        if (userId !== currentUser.uid) {
+          const userDocRef = doc(db, "users", userId);
+          const userDocSnapshot = await getDoc(userDocRef);
+
+          if (userDocSnapshot.exists()) {
+            const userData = userDocSnapshot.data();
+
+            // Check if the user is already in membersData
+            const isUserInArray = membersData.some(
+              (member) => member.uid === userId
+            );
+
+            // Add the user to membersData only if they're not already in the array
+            if (!isUserInArray) {
+              membersData.push({
+                displayName: userData.displayName,
+                uid: userId,
+                photoURL: userData.photoURL,
+                email: userData.email,
+              });
+            }
+          }
+        }
+      }
+
       const groupData = {
         id: groupId,
         displayName: groupName,
         createdAt: serverTimestamp(),
-        members: selectedUsers,
+        members: membersData,
         photoURL: downloadURL,
         messages: [], // Initialize with an empty array for messages
       };
 
       await setDoc(doc(groupChatRef, groupId), groupData);
-
-      // // Update userChats for each member
-      // for (const memberUID of users) {
-      //   await updateDoc(doc(db, "userChats", memberUID), {
-      //     [groupName + ".userInfo"]: {
-      //       displayName: groupName,
-      //       photoURL: downloadURL,
-      //     },
-      //     [groupName + ".date"]: serverTimestamp(),
-      //   });
-      // }
     }
+
+    setLoading(false);
     onClose();
   };
 
@@ -107,6 +142,7 @@ export const UsersSelectModel = ({ onClose }: { onClose: any }) => {
 
   return (
     <div className="fixed backdrop-blur-md z-10 w-full h-screen flex justify-center items-center">
+      <Loading status={loading} />
       <div className="flex gap-1">
         <div className="w-fit bg-white/90 p-5 space-y-2 rounded-lg">
           <h2 className="font-medium">Select users :</h2>
@@ -125,6 +161,17 @@ export const UsersSelectModel = ({ onClose }: { onClose: any }) => {
             />
           </div>
           <div>
+            <input
+              type="checkbox"
+              className="cursor-pointer"
+              checked
+              disabled
+              name="currentUser"
+              id="currentUser"
+            />
+            <label className="cursor-pointer ml-2" htmlFor={currentUser}>
+              {currentUser.displayName}
+            </label>
             {filteredUsers.map((user: any) => (
               <div key={user.uid} className="flex gap-2">
                 <input
@@ -132,9 +179,14 @@ export const UsersSelectModel = ({ onClose }: { onClose: any }) => {
                   type="checkbox"
                   name={user.uid}
                   id={user.uid}
+                  hidden={user.uid === currentUser.uid}
                   onChange={handleCheckboxChange}
                 />
-                <label className="cursor-pointer" htmlFor={user.uid}>
+                <label
+                  hidden={user.uid === currentUser.uid}
+                  className="cursor-pointer"
+                  htmlFor={user.uid}
+                >
                   {user.displayName}
                 </label>
               </div>

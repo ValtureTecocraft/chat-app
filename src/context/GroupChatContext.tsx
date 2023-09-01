@@ -1,32 +1,31 @@
-import { createContext, useContext, useReducer } from "react";
-import { AuthContext } from "./AuthContext";
+import { createContext, useReducer } from "react";
 
+// Create a new context for group chats
 export const GroupChatContext = createContext<any>(null); // Provide a default value for TypeScript
 
-interface AuthContxtProviderProps {
-  children: React.ReactNode; // Define the prop type for children
+// Define the props for the context provider
+interface GroupChatContextProviderProps {
+  children: React.ReactNode;
 }
 
-export const GroupChatContxtProvider: React.FC<AuthContxtProviderProps> = ({
-  children,
-}) => {
-  const currentUser = useContext(AuthContext);
-
+export const GroupChatContextProvider: React.FC<
+  GroupChatContextProviderProps
+> = ({ children }) => {
+  // Initial state for group chat
   const initialState = {
-    chatId: "null",
-    user: {},
+    selectedGroup: {}, // You can initialize this as needed
     isSelected: false,
   };
 
+  // Reducer for group chat state
   const chatReducer = (state: any, action: any) => {
     switch (action.type) {
-      case "CHANGE_USER":
+      case "CHANGE_GROUP":
+        // Add logic here to change the group
+        // For example, you can set the selected group in the state
         return {
-          user: action.payload,
-          chatId:
-            currentUser.uid > action.payload.uid
-              ? currentUser.uid + action.payload.uid
-              : action.payload.uid + currentUser.uid,
+          ...state,
+          selectedGroup: action.payload,
           isSelected: action.select,
         };
       default:
@@ -34,10 +33,12 @@ export const GroupChatContxtProvider: React.FC<AuthContxtProviderProps> = ({
     }
   };
 
+  // Use the useReducer hook to manage state with the chatReducer
   const [state, dispatch] = useReducer(chatReducer, initialState);
 
   return (
-    <GroupChatContext.Provider value={{ data: state, dispatch }}>
+    // Provide the state and dispatch function through the context
+    <GroupChatContext.Provider value={{ groupData: state, dispatch }}>
       {children}
     </GroupChatContext.Provider>
   );

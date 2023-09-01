@@ -4,13 +4,13 @@ import { Search } from "./Search";
 import { Chats } from "./Chats";
 import { UsersSelectModel } from "../model/UsersSelectModel";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
-// import { GroupChats } from "./GroupChats";
+import { Groups } from "./Groups";
 
 export const Sidebar: React.FC = () => {
   const [toggle, setToggle] = useState(false);
 
   return (
-    <div className="w-full h-[500px] flex flex-col">
+    <div className="w-full h-full flex flex-col">
       <Navbar />
       <Search />
       <button
@@ -21,8 +21,8 @@ export const Sidebar: React.FC = () => {
         <AiOutlineUsergroupAdd className="text-lg" />
         Start Group Chat
       </button>
-      <div className="flex flex-col overflow-y-auto">
-        {/* <GroupChats /> */}
+      <div className="flex h-full flex-col overflow-y-auto">
+        <Groups />
         <Chats />
       </div>
       {toggle && <UsersSelectModel onClose={() => setToggle(false)} />}
