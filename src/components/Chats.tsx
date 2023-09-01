@@ -2,13 +2,13 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { useState, useEffect, useContext } from "react";
 import { db } from "../config/firebase";
 import { AuthContext } from "../context/AuthContext";
-import { ChatContext } from "../context/ChatContext";
+import { CombinedChatContext } from "../context/ChatContext";
 
 export const Chats = () => {
   const [chats, setChats] = useState<any>([]);
 
   const currentUser = useContext(AuthContext);
-  const { dispatch } = useContext(ChatContext);
+  const { dispatch } = useContext(CombinedChatContext);
 
   useEffect(() => {
     const getChats = () => {
@@ -30,7 +30,7 @@ export const Chats = () => {
   // console.log(chats);
 
   const handleSelect = (u: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    dispatch({ type: "CHANGE_USER", payload: u, select: true });
+    dispatch({ type: "CHANGE_USER", payload: u, select: "user" });
   };
 
   return (

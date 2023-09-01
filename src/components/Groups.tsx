@@ -1,45 +1,59 @@
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { useState, useEffect, useContext } from "react";
 import { db } from "../config/firebase";
 import { AuthContext } from "../context/AuthContext";
 import { BiGroup } from "react-icons/bi";
-import { GroupChatContext } from "../context/GroupChatContext";
+import { CombinedChatContext } from "../context/ChatContext";
 
 export const Groups = () => {
   const [groups, setGroups] = useState<any[]>([]);
 
   const currentUser = useContext(AuthContext);
-  const { dispatch } = useContext(GroupChatContext);
+  const { dispatch } = useContext(CombinedChatContext);
 
   useEffect(() => {
     const getGroups = () => {
-      const q = query(collection(db, "groupChats"));
+      const groupData: any[] = [];
 
-      const unSubscribe = onSnapshot(q, (querySnapshot) => {
-        const groupData: any[] = [];
+      const unSubscribe = onSnapshot(
+        collection(db, "groupChats"),
+        (querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const group = doc.data();
 
-        querySnapshot.forEach((doc) => {
-          groupData.push({
-            id: doc.id,
-            ...doc.data(),
+            // Check if currentUser's UID exists in the members array
+            if (
+              group.members.some(
+                (member: any) => member.uid === currentUser.uid
+              )
+            ) {
+              groupData.push({
+                id: doc.id,
+                ...group,
+              });
+            }
           });
-        });
 
-        setGroups(groupData);
-      });
+          setGroups(groupData);
+        }
+      );
 
       return () => {
         unSubscribe();
       };
     };
 
-    currentUser.uid && getGroups();
+    getGroups();
   }, [currentUser.uid]);
 
   const handleSelect = (group: any) => {
-    console.log(group);
+    // console.log(group);
 
-    dispatch({ type: "CHANGE_GROUP", payload: group, select: true });
+    dispatch({
+      type: "CHANGE_GROUP",
+      payloadGroup: group,
+      select: "group",
+    });
   };
 
   return (

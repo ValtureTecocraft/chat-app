@@ -1,27 +1,43 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useReducer, useContext } from "react";
 import { AuthContext } from "./AuthContext";
 
-export const ChatContext = createContext<any>(null); // Provide a default value for TypeScript
+// Define the combined context
+export const CombinedChatContext = createContext<any>(null);
 
-interface AuthContxtProviderProps {
-  children: React.ReactNode; // Define the prop type for children
+// Define the props for the context provider
+interface CombinedChatContextProviderProps {
+  children: React.ReactNode;
 }
 
-export const ChatContxtProvider: React.FC<AuthContxtProviderProps> = ({
-  children,
-}) => {
+// Define the interface for the initial state
+interface CombinedChatState {
+  chatId: string;
+  user: any; // Replace 'any' with the actual type of user data
+  selectedGroup: any | null; // Replace 'any' with the actual type of group data
+  isSelected: string;
+}
+
+export const CombinedChatContextProvider: React.FC<
+  CombinedChatContextProviderProps
+> = ({ children }) => {
+  // Use the useContext hook inside the component to access AuthContext
   const currentUser = useContext(AuthContext);
 
-  const initialState = {
+  // Initial state for chat and group
+  const initialState: CombinedChatState = {
     chatId: "null",
-    user: {},
-    isSelected: false,
+    user: {}, // Replace with the actual type of user data
+    selectedGroup: {}, // Replace with the actual type of group data
+    isSelected: "null",
   };
 
-  const chatReducer = (state: any, action: any) => {
+  // Reducer for chat and group chat state
+  const reducer = (state: CombinedChatState, action: any) => {
     switch (action.type) {
       case "CHANGE_USER":
+        // Add logic here to change the user
         return {
+          ...state,
           user: action.payload,
           chatId:
             currentUser.uid > action.payload.uid
@@ -29,16 +45,26 @@ export const ChatContxtProvider: React.FC<AuthContxtProviderProps> = ({
               : action.payload.uid + currentUser.uid,
           isSelected: action.select,
         };
+      case "CHANGE_GROUP":
+        // Add logic here to change the group
+        return {
+          ...state,
+          selectedGroup: action.payloadGroup,
+          isSelected: action.select,
+          // Update other group chat state properties as needed
+        };
       default:
         return state;
     }
   };
 
-  const [state, dispatch] = useReducer(chatReducer, initialState);
+  // Use the useReducer hook to manage both chat and group chat state with the reducer
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <ChatContext.Provider value={{ data: state, dispatch }}>
+    // Provide both chat and group chat state and dispatch functions through the context
+    <CombinedChatContext.Provider value={{ data: state, dispatch }}>
       {children}
-    </ChatContext.Provider>
+    </CombinedChatContext.Provider>
   );
 };

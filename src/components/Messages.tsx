@@ -1,25 +1,28 @@
 import { useState, useContext, useEffect } from "react";
 import { Message } from "./Message";
-import { ChatContext } from "../context/ChatContext";
+import { CombinedChatContext } from "../context/ChatContext";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { ImagePreviewModel } from "../model/ImagePreviewModel";
 
 export const Messages = () => {
-  const [messages, setMessages] = useState<[]>([]);
-  const [selectedImageUrl, setSelectedImageUrl] = useState<string>("");
-  const [toggle, setToggle] = useState<boolean>(false);
-  const { data } = useContext(ChatContext);
+  const [messages, setMessages] = useState([]);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
+  const [toggle, setToggle] = useState(false);
+  const { data } = useContext(CombinedChatContext);
 
   useEffect(() => {
-    const unSubscribe = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
-      doc.exists() && setMessages(doc.data().messages);
-    });
+    // Check if data is defined and has the chatId property
+    if (data && data.chatId) {
+      const unSubscribe = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
+        doc.exists() && setMessages(doc.data().messages);
+      });
 
-    return () => {
-      unSubscribe();
-    };
-  }, [data.chatId]);
+      return () => {
+        unSubscribe();
+      };
+    }
+  }, [data]);
 
   return (
     <div className="w-full min-h-full flex flex-col justify-end gap-3">

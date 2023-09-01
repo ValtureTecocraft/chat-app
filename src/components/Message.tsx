@@ -1,6 +1,6 @@
 import { useRef, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { ChatContext } from "../context/ChatContext";
+import { CombinedChatContext } from "../context/ChatContext";
 
 export const Message = ({
   message,
@@ -12,7 +12,7 @@ export const Message = ({
   // console.log(message);
 
   const currentUser = useContext(AuthContext);
-  const { data } = useContext(ChatContext);
+  const { data } = useContext(CombinedChatContext);
 
   // console.log(message.date);
 

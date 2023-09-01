@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { IoMdAttach, IoMdClose } from "react-icons/io";
 import { LuImagePlus } from "react-icons/lu";
 import { AuthContext } from "../context/AuthContext";
-import { ChatContext } from "../context/ChatContext";
+import { CombinedChatContext } from "../context/ChatContext";
 import {
   Timestamp,
   arrayUnion,
@@ -20,7 +20,7 @@ export const Input = () => {
   const [img, setImg] = useState<File | null>(null);
 
   const currentUser = useContext(AuthContext);
-  const { data } = useContext(ChatContext);
+  const { data } = useContext(CombinedChatContext);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
