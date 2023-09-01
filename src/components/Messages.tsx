@@ -33,7 +33,7 @@ export const Messages = () => {
             imgClick={(imageUrl: string) => {
               setSelectedImageUrl(imageUrl);
               setToggle(true);
-              console.log(msg);
+              // console.log(msg);
             }}
           />
         </div>
