@@ -1,27 +1,22 @@
-# React + TypeScript + Vite
+1. Setup :-
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+   - Create Project in React as well as in Firebase.
+   - Create UI of the project.
+   - setup base config file of firebase in config/firebase.ts folder.
+   - import {getAuth} from firebase/auth : for authantication
+   - export const auth = gethAuth()
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Registration :-
+   - Initialize Email And Password Authantication from firebase (& Google if needed).
+   - For registration with email and password, import createUserWithEmailAndPassword.
+   - Its a function so pass it in handleSubmit, createUserWithEmailAndPassword(auth, email, password)
+   - createUserWithEmailAndPassword has promise then and catch.
+   - or you can store the response of the function :
+     - const res = createUserWithEmailAndPassword(auth, email, password);
+   - use try and catch method
+   - upload Profile Picture :
+     - initialize storage in firebase.
+     - create a reference to upload the file : const storageRef = ref(storage, "fileName"');
+     - const uploadTask = uploadBytesResumable(storageRef, file);
+     - use uploadTask.on() to upload the file.
+     -
