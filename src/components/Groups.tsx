@@ -13,28 +13,28 @@ export const Groups = () => {
 
   useEffect(() => {
     const getGroups = () => {
-      const groupData: any[] = [];
-
       const unSubscribe = onSnapshot(
         collection(db, "groupChats"),
         (querySnapshot) => {
-          querySnapshot.forEach((doc) => {
+          const groupData = querySnapshot.docs.map((doc) => {
             const group = doc.data();
 
-            // Check if currentUser's UID exists in the members array
-            if (
-              group.members.some(
-                (member: any) => member.uid === currentUser.uid
-              )
-            ) {
-              groupData.push({
+            // Use filter to find groups where currentUser's UID exists in the members array
+            const memberExists = group.members.filter(
+              (member: any) => member.uid === currentUser.uid
+            );
+
+            if (memberExists.length > 0) {
+              return {
                 id: doc.id,
                 ...group,
-              });
+              };
             }
+            return null; // Exclude groups where the user is not a member
           });
 
-          setGroups(groupData);
+          // Remove null entries and set the filtered groups
+          setGroups(groupData.filter(Boolean));
         }
       );
 

@@ -11,7 +11,7 @@ export const Messages = () => {
   const [toggle, setToggle] = useState(false);
   const { data } = useContext(CombinedChatContext);
 
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
     // Check if data is defined and has the chatId property
@@ -45,7 +45,7 @@ export const Messages = () => {
 
   return (
     <div className="w-full min-h-full flex flex-col justify-end gap-3">
-      {messages.map((msg, index) => (
+      {messages?.map((msg, index) => (
         <div key={index}>
           <Message
             message={msg}

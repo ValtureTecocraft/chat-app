@@ -25,6 +25,11 @@ export const Input = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (text || img) {
+      const messageRef =
+        data.isSelected === "user"
+          ? `chat/${data.chatId}`
+          : `groupChats/${data.selectedGroup.id}`;
+
       if (img) {
         const storageRef = ref(storage, uuid());
         const uploadTask = uploadBytesResumable(storageRef, img);
@@ -34,11 +39,15 @@ export const Input = () => {
           const downloadURL = await getDownloadURL(snapshot.ref);
 
           // Store user information in Firestore
-          await updateDoc(doc(db, "chats", data.chatId), {
+          await updateDoc(doc(db, messageRef), {
             messages: arrayUnion({
               id: uuid(),
               text,
               senderId: currentUser.uid,
+              senderInfo: data.isSelected === "group" && {
+                photoURL: currentUser.photoURL,
+                displayName: currentUser.displayName,
+              },
               date: Timestamp.now(),
               img: downloadURL,
             }),
@@ -69,29 +78,35 @@ export const Input = () => {
         // );
         console.log();
       } else {
-        await updateDoc(doc(db, "chats", data.chatId), {
+        await updateDoc(doc(db, messageRef), {
           messages: arrayUnion({
             id: uuid(),
             text,
             senderId: currentUser.uid,
+            senderInfo: data.isSelected === "group" && {
+              photoURL: currentUser.photoURL,
+              displayName: currentUser.displayName,
+            },
             date: Timestamp.now(),
           }),
         });
       }
 
-      await updateDoc(doc(db, "userChats", currentUser.uid), {
-        [data.chatId + ".lastMessage"]: {
-          text,
-        },
-        [data.chatId + ".date"]: serverTimestamp(),
-      });
+      if (data.isSelected === "user") {
+        await updateDoc(doc(db, "userChats", currentUser.uid), {
+          [data.chatId + ".lastMessage"]: {
+            text,
+          },
+          [data.chatId + ".date"]: serverTimestamp(),
+        });
 
-      await updateDoc(doc(db, "userChats", data.user.uid), {
-        [data.chatId + ".lastMessage"]: {
-          text,
-        },
-        [data.chatId + ".date"]: serverTimestamp(),
-      });
+        await updateDoc(doc(db, "userChats", data.user.uid), {
+          [data.chatId + ".lastMessage"]: {
+            text,
+          },
+          [data.chatId + ".date"]: serverTimestamp(),
+        });
+      }
 
       setText("");
       setImg(null);
