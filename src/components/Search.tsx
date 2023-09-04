@@ -112,6 +112,7 @@ export const Search: React.FC = () => {
           placeholder="Search..."
           name="search"
           id="search"
+          autoComplete="off"
           onChange={(e) => setUserName(e.target.value)}
           onKeyDown={handleKey}
         />
