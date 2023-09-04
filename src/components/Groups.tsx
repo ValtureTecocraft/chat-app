@@ -70,12 +70,10 @@ export const Groups = () => {
           onClick={() => handleSelect(group)}
           className="cursor-pointer w-full h-16 px-3 flex gap-3 items-center text-white text-xs border-b-2 border-gray-500 hover:bg-[#323c52]"
         >
-          <img
-            className="w-10 h-10 rounded-full object-cover"
-            src={group.photoURL}
-            alt="group"
-          />
-          <div className="w-full flex justify-between items-center">
+          <div className="w-10 h-10 overflow-hidden rounded-full flex justify-center items-center">
+            <img className="w-full h-full" src={group.photoURL} alt="group" />
+          </div>
+          <div className="w-[calc(100%-40px)] flex justify-between items-center">
             <span className="font-semibold text-sm">{group.displayName}</span>
             {/* You can display additional information about the group here */}
             <div>
