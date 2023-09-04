@@ -11,10 +11,29 @@ export const Messages = () => {
   const [toggle, setToggle] = useState(false);
   const { data } = useContext(CombinedChatContext);
 
+  console.log(data);
+
   useEffect(() => {
     // Check if data is defined and has the chatId property
-    if (data && data.chatId) {
+    if (data && data.isSelected === "user") {
+      console.log("userChat");
+
       const unSubscribe = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
+        doc.exists() && setMessages(doc.data().messages);
+      });
+
+      return () => {
+        unSubscribe();
+      };
+    }
+
+    // Check if data is defined and has the selectedGroup property
+    if (data && data.isSelected === "group") {
+      console.log("groupChat");
+
+      // Assuming that group messages are stored under a specific collection path, adjust this path as needed
+      const groupChatPath = `groupChats/${data.selectedGroup.id}`;
+      const unSubscribe = onSnapshot(doc(db, groupChatPath), (doc) => {
         doc.exists() && setMessages(doc.data().messages);
       });
 

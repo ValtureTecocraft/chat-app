@@ -46,8 +46,14 @@ export const Groups = () => {
     getGroups();
   }, [currentUser.uid]);
 
+  const handleClearChatState = () => {
+    dispatch({ type: "RESET_CHAT_STATE" });
+  };
+
   const handleSelect = (group: any) => {
     // console.log(group);
+
+    handleClearChatState();
 
     dispatch({
       type: "CHANGE_GROUP",

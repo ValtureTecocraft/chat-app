@@ -1,6 +1,8 @@
-import { useRef, useEffect, useContext } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { CombinedChatContext } from "../context/ChatContext";
+import { db } from "../config/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 export const Message = ({
   message,
@@ -11,12 +13,33 @@ export const Message = ({
 }) => {
   // console.log(message);
 
+  const [senderInfo, setSenderInfo] = useState<any | null>(null);
+
   const currentUser = useContext(AuthContext);
   const { data } = useContext(CombinedChatContext);
 
   // console.log(message.date);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchSenderInfo = async () => {
+      try {
+        // Use the 'getDoc' function from Firebase v9 to fetch the document
+        const userDoc = await getDoc(doc(db, "users", message.senderId));
+
+        if (userDoc.exists()) {
+          setSenderInfo(userDoc.data());
+        } else {
+          console.log("Sender's information not found.");
+        }
+      } catch (error) {
+        console.error("Error fetching sender's information:", error);
+      }
+    };
+
+    fetchSenderInfo();
+  }, [message.senderId]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView();
@@ -53,8 +76,8 @@ export const Message = ({
           className="w-8 h-8 rounded-full object-cover"
           src={
             message.senderId === currentUser.uid
-              ? currentUser.photoURL
-              : data.user.photoURL
+              ? currentUser?.photoURL
+              : senderInfo?.photoURL
           }
           alt="profile"
         />

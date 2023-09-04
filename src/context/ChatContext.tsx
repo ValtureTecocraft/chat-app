@@ -36,13 +36,19 @@ export const CombinedChatContextProvider: React.FC<
     switch (action.type) {
       case "CHANGE_USER":
         // Add logic here to change the user
+        let newChatId = "null";
+
+        if (action.payload) {
+          newChatId =
+            currentUser.uid > action.payload.uid
+              ? currentUser.uid + action.payload.uid
+              : action.payload.uid + currentUser.uid;
+        }
+
         return {
           ...state,
           user: action.payload,
-          chatId:
-            currentUser.uid > action.payload.uid
-              ? currentUser.uid + action.payload.uid
-              : action.payload.uid + currentUser.uid,
+          chatId: newChatId,
           isSelected: action.select,
         };
       case "CHANGE_GROUP":
@@ -52,6 +58,20 @@ export const CombinedChatContextProvider: React.FC<
           selectedGroup: action.payloadGroup,
           isSelected: action.select,
           // Update other group chat state properties as needed
+        };
+      case "RESET_USER_CHAT_STATE":
+        // Reset chat state
+        return {
+          ...state,
+          chatId: "null",
+          user: {},
+          isSelected: "null",
+        };
+      case "RESET_GROUP_CHAT_STATE":
+        // Reset chat state
+        return {
+          ...state,
+          selectedGroup: {},
         };
       default:
         return state;
