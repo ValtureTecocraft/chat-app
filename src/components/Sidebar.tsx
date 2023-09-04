@@ -26,7 +26,7 @@ export const Sidebar: React.FC = () => {
       >
         {ripples}
         <AiOutlineUsergroupAdd className="text-lg" />
-        New group
+        <span className="pt-1">New group</span>
       </button>
       <div className="flex h-full flex-col overflow-y-auto">
         <Groups />
