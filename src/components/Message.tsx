@@ -94,9 +94,13 @@ export const Message = ({
         {message.img && (
           <div
             onClick={() => imgClick(message.img)}
-            className="max-w-[25%] h-28 overflow-hidden w-full flex justify-center items-center rounded-md cursor-pointer"
+            className="max-w-[200px] max-h-80 overflow-hidden w-full flex justify-center cursor-pointer"
           >
-            <img className="w-full" src={message.img} alt="" />
+            <img
+              className="w-auto h-full object-contain object-right-top rounded-md"
+              src={message.img}
+              alt=""
+            />
           </div>
         )}
       </div>
