@@ -24,19 +24,19 @@ export const Home: React.FC = () => {
         <div className="block md:hidden">
           {!data.toggleSidebar ? (
             <HiMenuAlt2
-              className="absolute z-10 right-3 top-4 text-2xl "
+              className="absolute z-20 right-3 top-4 text-2xl "
               onClick={handleClick}
             />
           ) : (
             <GrClose
-              className="absolute z-10 text-2xl text-white bg-white right-3 top-4"
+              className="absolute z-20 text-2xl text-white bg-white right-3 top-4"
               onClick={handleClick}
             />
           )}
         </div>
 
         <div
-          className={`md:hidden block absolute w-[70%] h-screen bg-[#445069] duration-300 ${
+          className={`md:hidden block absolute z-10 w-[70%] h-screen bg-[#445069] duration-300 ${
             data.toggleSidebar ? "right-0" : "-right-[700px]"
           }`}
         >
