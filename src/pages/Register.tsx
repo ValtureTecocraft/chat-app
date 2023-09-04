@@ -116,7 +116,7 @@ export const Register: React.FC = () => {
           alt="bg Image"
         />
       </div>
-      <div className="w-[400px] py-5 px-8 gap-5 flex flex-col justify-center items-center rounded-lg border-2 border-black/10 shadow-lg backdrop-blur-sm hover:backdrop-blur-md duration-300 transition-all bg-black/5">
+      <div className="w-full md:w-[400px] mx-5 py-5 px-8 gap-5 flex flex-col justify-center items-center rounded-lg border-2 border-black/10 shadow-lg backdrop-blur-sm hover:backdrop-blur-md duration-300 transition-all bg-black/5">
         <h1 className="uppercase text-3xl font-bold tracking-widest">
           Register
         </h1>
