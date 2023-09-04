@@ -54,15 +54,17 @@ export const Message = ({
           src={
             data.isSelected === "user"
               ? message.senderId === currentUser.uid
-                ? currentUser.photoURL
-                : data.user.photoURL
-              : message.senderInfo.photoURL
+                ? currentUser?.photoURL
+                : data.user?.photoURL
+              : message?.senderInfo?.photoURL
           }
           alt="profile"
         />
-        <span className="font-light text-xs text-white">
-          {convertTimestampToTime(message.date)}
-        </span>
+        {data.isSelected === "user" && (
+          <span className="font-light text-xs text-white">
+            {convertTimestampToTime(message.date)}
+          </span>
+        )}
       </div>
 
       <div
@@ -70,6 +72,14 @@ export const Message = ({
           message.senderId === currentUser.uid ? "items-end" : ""
         } gap-2 flex flex-col w-full`}
       >
+        {data.isSelected === "group" && (
+          <p className="text-sm text-gray-200">
+            {message?.senderInfo?.displayName?.split(" ")[0]}
+            <span className="font-light ml-1 text-xs text-white">
+              - {convertTimestampToTime(message.date)}
+            </span>
+          </p>
+        )}
         {message.text && (
           <p
             className={`${
