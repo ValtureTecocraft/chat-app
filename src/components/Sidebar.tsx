@@ -26,7 +26,7 @@ export const Sidebar: React.FC = () => {
       >
         {ripples}
         <AiOutlineUsergroupAdd className="text-lg" />
-        Start Group Chat
+        New group
       </button>
       <div className="flex h-full flex-col overflow-y-auto">
         <Groups />
