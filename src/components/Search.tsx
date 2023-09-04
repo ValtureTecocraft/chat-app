@@ -34,7 +34,7 @@ export const Search: React.FC = () => {
       try {
         const q = query(
           collection(db, "users"),
-          where("displayName", ">=", userName)
+          where("displayName", ">=", userName) // Convert display name to lowercase
         );
 
         const querySnapshot = await getDocs(q);
@@ -46,6 +46,7 @@ export const Search: React.FC = () => {
 
         setSearchResults(results);
       } catch (error) {
+        setErr(true);
         setSearchResults([]);
       } finally {
         setLoading(false);
@@ -57,25 +58,6 @@ export const Search: React.FC = () => {
 
     return () => clearTimeout(delayTimer);
   }, [userName]);
-
-  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchText = e.target.value;
-    setUserName(searchText);
-
-    const q = query(
-      collection(db, "users"),
-      where("displayName", "==", userName)
-    );
-
-    try {
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        setUser(doc.data());
-      });
-    } catch (error) {
-      setErr(true);
-    }
-  };
 
   const handleSelect = async () => {
     //check whether the group(chats in firestore) exists, if not create
@@ -115,11 +97,11 @@ export const Search: React.FC = () => {
     setUserName("");
   };
 
-  // const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  //   if (e.code === "Enter") {
-  //     handleSearch();
-  //   }
-  // };
+  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === "Backspace") {
+      setSearchResults([]);
+    }
+  };
 
   return (
     <div>
@@ -130,8 +112,8 @@ export const Search: React.FC = () => {
           placeholder="Search..."
           name="search"
           id="search"
-          value={userName}
-          onChange={handleSearch}
+          onChange={(e) => setUserName(e.target.value)}
+          onKeyDown={handleKey}
         />
       </div>
       {err && <span>User not found</span>}
@@ -139,7 +121,7 @@ export const Search: React.FC = () => {
       {loading && <span>Loading...</span>}
 
       {searchResults.length !== 0 && (
-        <div className="w-full h-60 overflow-auto">
+        <div className="w-full max-h-60 overflow-auto">
           {searchResults.map((result: any) => (
             <div
               key={result.uid}
