@@ -48,9 +48,9 @@
 }
 
 .bubble {
-  @apply relative before:rotate-45 before:z-10 before:content-[''] before:w-0 before:h-0 before:absolute before:top-[2px] before:left-[-5px] before:border-[6px] before:border-white before:border-solid;
+  @apply relative before:rotate-45 before:z-10 before:content-[''] before:w-0 before:h-0 before:absolute before:top-[-6px] before:left-[-5px] before:border-[6px] before:border-b-white before:border-transparent;
 }
 
 .bubbleOwner {
-  @apply relative before:rotate-45 before:z-10 before:content-[''] before:w-0 before:h-0 before:absolute before:top-[2px] before:right-[-5px] before:border-[6px] before:border-[#414857]  before:border-solid;
+  @apply relative before:rotate-45 before:z-10 before:content-[''] before:w-0 before:h-0 before:absolute before:top-[-6px] before:right-[-5px] before:border-[6px] before:border-r-[#414857]  before:border-transparent;
 }
