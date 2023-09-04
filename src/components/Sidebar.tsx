@@ -20,7 +20,7 @@ export const Sidebar: React.FC = () => {
       <Search />
       <button
         ref={ref}
-        // onClick={() => setToggle(true)}
+        onClick={() => setToggle(true)}
         type="button"
         className="btnGreen m-2 flex justify-center items-center gap-2"
       >
