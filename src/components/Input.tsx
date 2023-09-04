@@ -27,7 +27,7 @@ export const Input = () => {
     if (text || img) {
       const messageRef =
         data.isSelected === "user"
-          ? `chat/${data.chatId}`
+          ? `chats/${data.chatId}`
           : `groupChats/${data.selectedGroup.id}`;
 
       if (img) {
@@ -39,6 +39,7 @@ export const Input = () => {
           const downloadURL = await getDownloadURL(snapshot.ref);
 
           // Store user information in Firestore
+
           await updateDoc(doc(db, messageRef), {
             messages: arrayUnion({
               id: uuid(),
@@ -52,6 +53,7 @@ export const Input = () => {
               img: downloadURL,
             }),
           });
+
           console.log("File available at", downloadURL);
         } catch (error) {
           console.error("Error uploading file:", error);

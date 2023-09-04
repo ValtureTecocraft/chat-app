@@ -5,52 +5,52 @@
 @tailwind utilities;
 
 ::-webkit-scrollbar {
-	width: 8px;
-	background-color: #4b576f;
+  width: 8px;
+  background-color: #4b576f;
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: #323c52;
-	border-radius: 10px;
+  background-color: #323c52;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background-color: #293143;
+  background-color: #293143;
 }
 
 .scrollbar-hide {
-	scrollbar-width: none; /* Firefox */
-	-ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-	display: none; /* Safari and Chrome */
+  display: none; /* Safari and Chrome */
 }
 
 .errorMsg {
-	@apply text-red-800 text-sm;
+  @apply text-red-800 text-sm;
 }
 
 .buttonTW {
-	@apply bg-red-600 hover:bg-red-700;
+  @apply bg-red-600 hover:bg-red-700;
 }
 
 .btnRed {
-	@apply uppercase bg-red-500/90 hover:bg-red-500 rounded py-1 px-3 text-white;
+  @apply uppercase bg-red-500/90 hover:bg-red-500 rounded py-1 px-3 text-white;
 }
 
 .btnGreen {
-	@apply uppercase bg-green-500/90 hover:bg-green-500 rounded py-1 px-3 text-white;
+  @apply uppercase bg-green-500/90 hover:bg-green-500 rounded py-1 px-3 text-white;
 }
 
 .btnBlack {
-	@apply uppercase bg-black/90 hover:bg-black rounded py-1 px-3 text-white;
+  @apply uppercase bg-black/90 hover:bg-black rounded py-1 px-3 text-white;
 }
 
 .bubble {
-	@apply relative before:rotate-45 before:z-10 before:content-[''] before:w-0 before:h-0 before:absolute before:top-[2px] before:left-[-5px] before:border-[6px] before:border-white  before:border-solid;
+  @apply relative before:rotate-45 before:z-10 before:content-[''] before:w-0 before:h-0 before:absolute before:top-[2px] before:left-[-5px] before:border-[6px] before:border-white before:border-solid;
 }
 
 .bubbleOwner {
-	@apply relative before:rotate-45 before:z-10 before:content-[''] before:w-0 before:h-0 before:absolute before:top-[2px] before:right-[-5px] before:border-[6px] before:border-[#414857]  before:border-solid;
+  @apply relative before:rotate-45 before:z-10 before:content-[''] before:w-0 before:h-0 before:absolute before:top-[2px] before:right-[-5px] before:border-[6px] before:border-[#414857]  before:border-solid;
 }
