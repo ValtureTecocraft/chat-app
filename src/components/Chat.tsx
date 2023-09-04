@@ -18,7 +18,7 @@ export const Chat = () => {
               ? data?.user?.displayName
               : data?.selectedGroup?.displayName}
           </span>
-          <div className="flex gap-3 text-lg">
+          <div className="flex gap-3 text-lg mr-8 md:mr-0">
             <BsCameraVideoFill className="cursor-pointer text-gray-300 hover:text-gray-400" />
             <IoIosPersonAdd className="cursor-pointer text-gray-300 hover:text-gray-400" />
             <BsThreeDots className="cursor-pointer text-gray-300 hover:text-gray-400" />

@@ -9,7 +9,7 @@ export const Groups = () => {
   const [groups, setGroups] = useState<any[]>([]);
 
   const currentUser = useContext(AuthContext);
-  const { dispatch } = useContext(CombinedChatContext);
+  const { data, dispatch } = useContext(CombinedChatContext);
 
   useEffect(() => {
     const getGroups = () => {
@@ -60,6 +60,8 @@ export const Groups = () => {
       payloadGroup: group,
       select: "group",
     });
+
+    dispatch({ type: "TOGGLE_SIDEBAR", payload: !data.toggleSidebar });
   };
 
   return (

@@ -15,6 +15,7 @@ interface CombinedChatState {
   user: any; // Replace 'any' with the actual type of user data
   selectedGroup: any | null; // Replace 'any' with the actual type of group data
   isSelected: string;
+  toggleSidebar: boolean;
 }
 
 export const CombinedChatContextProvider: React.FC<
@@ -29,6 +30,7 @@ export const CombinedChatContextProvider: React.FC<
     user: {}, // Replace with the actual type of user data
     selectedGroup: {}, // Replace with the actual type of group data
     isSelected: "null",
+    toggleSidebar: true,
   };
 
   // Reducer for chat and group chat state
@@ -72,6 +74,12 @@ export const CombinedChatContextProvider: React.FC<
         return {
           ...state,
           selectedGroup: {},
+        };
+      case "TOGGLE_SIDEBAR":
+        // Reset chat state
+        return {
+          ...state,
+          toggleSidebar: action.payload,
         };
       default:
         return state;

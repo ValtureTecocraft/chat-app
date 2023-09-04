@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { Chat } from "../components/Chat";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { GrClose } from "react-icons/gr";
+import { CombinedChatContext } from "../context/ChatContext";
 
 export const Home: React.FC = () => {
-  const [menu, setMenu] = useState<boolean>(true);
+  const { data, dispatch } = useContext(CombinedChatContext);
 
   const handleClick = () => {
-    setMenu(!menu);
+    dispatch({ type: "TOGGLE_SIDEBAR", payload: !data.toggleSidebar });
   };
 
   return (
@@ -21,7 +22,7 @@ export const Home: React.FC = () => {
 
         {/* sidebar for Mobile View */}
         <div className="block md:hidden">
-          {!menu ? (
+          {!data.toggleSidebar ? (
             <HiMenuAlt2
               className="absolute z-10 right-3 top-4 text-2xl "
               onClick={handleClick}
@@ -36,7 +37,7 @@ export const Home: React.FC = () => {
 
         <div
           className={`md:hidden block absolute w-[70%] h-screen bg-[#445069] duration-300 ${
-            menu ? "right-0" : "-right-[700px]"
+            data.toggleSidebar ? "right-0" : "-right-[700px]"
           }`}
         >
           <Sidebar />

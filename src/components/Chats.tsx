@@ -8,7 +8,7 @@ export const Chats = () => {
   const [chats, setChats] = useState<any>([]);
 
   const currentUser = useContext(AuthContext);
-  const { dispatch } = useContext(CombinedChatContext);
+  const { data, dispatch } = useContext(CombinedChatContext);
 
   useEffect(() => {
     const getChats = () => {
@@ -31,6 +31,7 @@ export const Chats = () => {
 
   const handleSelect = (u: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     dispatch({ type: "CHANGE_USER", payload: u, select: "user" });
+    dispatch({ type: "TOGGLE_SIDEBAR", payload: !data.toggleSidebar });
   };
 
   return (
