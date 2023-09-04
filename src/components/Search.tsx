@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import {
   collection,
   doc,
@@ -15,49 +15,26 @@ import { AuthContext } from "../context/AuthContext";
 
 export const Search: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
   const [err, setErr] = useState<boolean>(false);
 
   const currentUser = useContext(AuthContext);
 
-  useEffect(() => {
-    if (userName.trim() === "") {
-      setSearchResults([]);
-      return;
+  const handleSearch = async () => {
+    const q = query(
+      collection(db, "users"),
+      where("displayName", "==", userName)
+    );
+
+    try {
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        setUser(doc.data());
+      });
+    } catch (error) {
+      setErr(true);
     }
-
-    const searchUsers = async () => {
-      setLoading(true);
-
-      try {
-        const q = query(
-          collection(db, "users"),
-          where("displayName", ">=", userName) // Convert display name to lowercase
-        );
-
-        const querySnapshot = await getDocs(q);
-        const results: any[] = [];
-
-        querySnapshot.forEach((doc) => {
-          results.push(doc.data());
-        });
-
-        setSearchResults(results);
-      } catch (error) {
-        setErr(true);
-        setSearchResults([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Delay the search to avoid excessive API calls while typing
-    const delayTimer = setTimeout(searchUsers, 300);
-
-    return () => clearTimeout(delayTimer);
-  }, [userName]);
+  };
 
   const handleSelect = async () => {
     //check whether the group(chats in firestore) exists, if not create
@@ -98,8 +75,8 @@ export const Search: React.FC = () => {
   };
 
   const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === "Backspace") {
-      setSearchResults([]);
+    if (e.code === "Enter") {
+      handleSearch();
     }
   };
 
@@ -112,33 +89,26 @@ export const Search: React.FC = () => {
           placeholder="Search..."
           name="search"
           id="search"
-          autoComplete="off"
+          value={userName}
           onChange={(e) => setUserName(e.target.value)}
           onKeyDown={handleKey}
         />
       </div>
       {err && <span>User not found</span>}
 
-      {loading && <span>Loading...</span>}
-
-      {searchResults.length !== 0 && (
-        <div className="w-full max-h-60 overflow-auto">
-          {searchResults.map((result: any) => (
-            <div
-              key={result.uid}
-              onClick={() => handleSelect()}
-              className="cursor-pointer w-full p-3 flex gap-3 items-center text-white border-b-2 border-gray-500 hover:bg-[#323c52]"
-            >
-              <img
-                className="w-10 h-10 rounded-full object-cover"
-                src={result.photoURL}
-                alt="profile"
-              />
-              <div>
-                <span className="font-bold">{result.displayName}</span>
-              </div>
-            </div>
-          ))}
+      {user && userName && (
+        <div
+          onClick={handleSelect}
+          className="cursor-pointer w-full p-3 flex gap-3 items-center text-white border-b-2 border-gray-500 hover:bg-[#323c52]"
+        >
+          <img
+            className="w-10 h-10 rounded-full object-cover"
+            src={user.photoURL}
+            alt="profile"
+          />
+          <div>
+            <span className="font-bold">{user.displayName}</span>
+          </div>
         </div>
       )}
     </div>
