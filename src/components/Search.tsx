@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   collection,
   doc,
@@ -15,12 +15,53 @@ import { AuthContext } from "../context/AuthContext";
 
 export const Search: React.FC = () => {
   const [userName, setUserName] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
   const [err, setErr] = useState<boolean>(false);
 
   const currentUser = useContext(AuthContext);
 
-  const handleSearch = async () => {
+  useEffect(() => {
+    if (userName.trim() === "") {
+      setSearchResults([]);
+      return;
+    }
+
+    const searchUsers = async () => {
+      setLoading(true);
+
+      try {
+        const q = query(
+          collection(db, "users"),
+          where("displayName", ">=", userName)
+        );
+
+        const querySnapshot = await getDocs(q);
+        const results: any[] = [];
+
+        querySnapshot.forEach((doc) => {
+          results.push(doc.data());
+        });
+
+        setSearchResults(results);
+      } catch (error) {
+        setSearchResults([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Delay the search to avoid excessive API calls while typing
+    const delayTimer = setTimeout(searchUsers, 300);
+
+    return () => clearTimeout(delayTimer);
+  }, [userName]);
+
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchText = e.target.value;
+    setUserName(searchText);
+
     const q = query(
       collection(db, "users"),
       where("displayName", "==", userName)
@@ -74,11 +115,11 @@ export const Search: React.FC = () => {
     setUserName("");
   };
 
-  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === "Enter") {
-      handleSearch();
-    }
-  };
+  // const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.code === "Enter") {
+  //     handleSearch();
+  //   }
+  // };
 
   return (
     <div>
@@ -90,25 +131,31 @@ export const Search: React.FC = () => {
           name="search"
           id="search"
           value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          onKeyDown={handleKey}
+          onChange={handleSearch}
         />
       </div>
       {err && <span>User not found</span>}
 
-      {user && userName && (
-        <div
-          onClick={handleSelect}
-          className="cursor-pointer w-full p-3 flex gap-3 items-center text-white border-b-2 border-gray-500 hover:bg-[#323c52]"
-        >
-          <img
-            className="w-10 h-10 rounded-full object-cover"
-            src={user.photoURL}
-            alt="profile"
-          />
-          <div>
-            <span className="font-bold">{user.displayName}</span>
-          </div>
+      {loading && <span>Loading...</span>}
+
+      {searchResults.length !== 0 && (
+        <div className="w-full h-60 overflow-auto">
+          {searchResults.map((result: any) => (
+            <div
+              key={result.uid}
+              onClick={() => handleSelect()}
+              className="cursor-pointer w-full p-3 flex gap-3 items-center text-white border-b-2 border-gray-500 hover:bg-[#323c52]"
+            >
+              <img
+                className="w-10 h-10 rounded-full object-cover"
+                src={result.photoURL}
+                alt="profile"
+              />
+              <div>
+                <span className="font-bold">{result.displayName}</span>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
