@@ -13,7 +13,7 @@ export const Home: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-[#5B9A8B]">
+    <div className="w-full h-screen flex justify-center items-center bg-[#5B9A8B] font-Josefin">
       <div className="relative w-full h-full flex border border-green-800 overflow-hidden">
         {/* sidebar for Tablet and Desktop View */}
         <div className="hidden md:block w-[25%] bg-[#445069]">
