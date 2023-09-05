@@ -27,8 +27,8 @@ export const CombinedChatContextProvider: React.FC<
   // Initial state for chat and group
   const initialState: CombinedChatState = {
     chatId: "null",
-    user: {}, // Replace with the actual type of user data
-    selectedGroup: {}, // Replace with the actual type of group data
+    user: {},
+    selectedGroup: {},
     isSelected: "null",
     toggleSidebar: true,
   };
@@ -54,15 +54,13 @@ export const CombinedChatContextProvider: React.FC<
           isSelected: action.select,
         };
       case "CHANGE_GROUP":
-        // Add logic here to change the group
         return {
           ...state,
           selectedGroup: action.payloadGroup,
           isSelected: action.select,
-          // Update other group chat state properties as needed
         };
       case "RESET_USER_CHAT_STATE":
-        // Reset chat state
+        // Reset user chat state
         return {
           ...state,
           chatId: "null",
@@ -70,13 +68,12 @@ export const CombinedChatContextProvider: React.FC<
           isSelected: "null",
         };
       case "RESET_GROUP_CHAT_STATE":
-        // Reset chat state
+        // Reset group chat state
         return {
           ...state,
           selectedGroup: {},
         };
       case "TOGGLE_SIDEBAR":
-        // Reset chat state
         return {
           ...state,
           toggleSidebar: action.payload,
